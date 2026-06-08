@@ -50,7 +50,7 @@ const Navbar = () => {
                     <form onSubmit={handleSearchSubmit} className="hidden sm:flex flex-1 max-w-sm text-xs sm:text-sm">
                         <div className="relative w-full">
                             <SearchIcon className="absolute icon left-2.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500" />
-                            <input type="text" placeholder="Search for products" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className=" w-full pl-8 p-2 bg-orange-50 rounded-full ring ring-app-orange/15 focus:ring-app-orange/3d•• / > " />
+                            <input type="text" placeholder="Search for products" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className=" w-full pl-8 p-2 bg-orange-50 rounded-full ring ring-app-orange/15 focus:ring-app-orange > " aria-label="Search Products" />
                         </div>
                     </form>
                     {/* Right Action  */}

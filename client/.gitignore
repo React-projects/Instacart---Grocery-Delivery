@@ -26,3 +26,10 @@ dist-ssr
 .prettierrc
 .prettierignore
 .eslint*
+
+# env
+.env
+.env.local
+.env.development
+.env.production
+
