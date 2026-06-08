@@ -1,6 +1,8 @@
+import AppBromoBanner from '../components/Home/AppBromoBanner';
 import Features from '../components/Home/Features';
 import Hero from '../components/Home/Hero';
 import HomeCategories from '../components/Home/HomeCategories';
+import NewsLetter from '../components/Home/NewsLetter';
 import ProductCategories from '../components/Home/ProductCategories';
 
 const Home = () => {
@@ -10,6 +12,8 @@ const Home = () => {
             <Features />
             <HomeCategories />
             <ProductCategories />
+            <AppBromoBanner />
+            <NewsLetter />
         </div>
     );
 };
