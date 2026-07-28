@@ -1,13 +1,11 @@
 import { ArrowUpRight, ArrowUpRightIcon, BikeIcon, ChevronDown, ChevronDownIcon, LogOutIcon, MapPinIcon, MenuIcon, PackageIcon, SearchIcon, ShieldIcon, ShoppingCartIcon, User, UserIcon, X, XIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../../context/CardContext';
 
 const Navbar = () => {
     const user: any = { name: 'John Doe', email: 'johndoe@example.com', isAdmin: true };
-    const { cartCount, setIsCartOpen } = {
-        cartCount: 5,
-        setIsCartOpen: (_data: any) => {},
-    };
+    const { cartCount, setCartOpen } = useCart();
     const [searchTerm, setSearchTerm] = useState('');
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -56,7 +54,7 @@ const Navbar = () => {
                     {/* Right Action  */}
                     <div className="flex item-center gap-2">
                         {/* cart  */}
-                        <button className="relative p-2 rounded-xl" onClick={() => setIsCartOpen(true)}>
+                        <button className="relative p-2 rounded-xl" onClick={() => setCartOpen(true)}>
                             <ShoppingCartIcon className="size-5 text-zinc-900" />
                             {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-app-orange text-white text-(10px) w-4 h-4 flex-center rounded-full">{cartCount}</span>}
                         </button>

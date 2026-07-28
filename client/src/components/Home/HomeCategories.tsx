@@ -12,7 +12,7 @@ const HomeCategories = () => {
                 <div className="flex items-center mt-8 overflow-x-auto  no-scrollbar">
                     {categoriesData.map(category => (
                         <Link
-                            to={`/categories/${category.slug}`}
+                            to={`/products?category=${category.slug}`}
                             key={category.slug}
                             onClick={() => {
                                 window.scrollTo(0, 0);
