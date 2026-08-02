@@ -26,12 +26,12 @@ const App = () => {
                     <Route path="/product/:id" element={<ProductsPage />} />
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/deals" element={<FlashDeals />} />
-                </Route>
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/orders" element={<MyOrders />} />
-                    <Route path="/order/:id" element={<OrderTracking />} />
-                    <Route path="/addresses" element={<Address />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/checkout" element={<Checkout />} />
+                        <Route path="/orders" element={<MyOrders />} />
+                        <Route path="/orders/:id" element={<OrderTracking />} />
+                        <Route path="/addresses" element={<Address />} />
+                    </Route>
                 </Route>
             </Routes>
         </>
