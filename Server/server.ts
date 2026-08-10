@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import authRouter from './Routes/authRoutes.js';
 import productRouter from './Routes/productRotes.js';
+import uploadRouter from './Routes/uploadRoutes.js';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
+app.use('/api/upload', uploadRouter);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
