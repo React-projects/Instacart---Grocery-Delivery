@@ -20,6 +20,8 @@ dist-ssr
 # Claude Code config (contains API keys)
 .claude/
 .qodo/
+.kilo/
+
 .DS_Store
 *.suo
 *.ntvs*
