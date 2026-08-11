@@ -5,6 +5,8 @@ import authRouter from './Routes/authRoutes.js';
 import productRouter from './Routes/productRotes.js';
 import uploadRouter from './Routes/uploadRoutes.js';
 import orderRouter from './Routes/orderRoutes.js';
+import { serve } from 'inngest/express';
+import { inngest, functions } from './inngest/index.js';
 
 const app = express();
 
@@ -21,6 +23,9 @@ app.use('/api/auth', authRouter);
 app.use('/api/product', productRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/order', orderRouter);
+// Inngest server
+app.use('/api/inngest', serve({ client: inngest, functions }));
+
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
