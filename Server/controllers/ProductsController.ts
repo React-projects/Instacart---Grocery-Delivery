@@ -1,4 +1,3 @@
-import { Category } from './../../.kilo/worktrees/debonair-aerosteon/client/src/types/index';
 import { Request, Response } from 'express';
 import { prisma } from '../Config/prisam.js';
 
