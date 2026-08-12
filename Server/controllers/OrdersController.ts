@@ -1,6 +1,7 @@
 import { Not } from './../generated/prisma/internal/prismaNamespace';
 import { Request, Response } from 'express';
 import { prisma } from '../Config/prisam.js';
+import { inngest } from '../inngest/index.js';
 
 // create ORder
 // Post /api/orders
@@ -82,7 +83,22 @@ export const createOrder = async (req: Request, res: Response) => {
          },
       });
    }
-};
+   // Send stock update events for each product in the order
+   for (const item of ordersItems) {
+       await inngest.send({
+         name: 'inventory/stock-update',
+         data: {
+            productId: item.product,
+         },
+       });
+       await inngest.send({
+         name: 'order/placed',
+         data: {
+            orderId: order.id,
+         },
+       })
+   }
+};;
 
 // users ORders
 // Get /api/orders

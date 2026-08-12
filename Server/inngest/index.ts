@@ -1,4 +1,3 @@
-import { Product } from './../generated/prisma/client';
 import { cron, Inngest } from 'inngest';
 import { prisma } from '../Config/prisam.js';
 import { sendEmails } from '../Config/nodeamailer.js';
