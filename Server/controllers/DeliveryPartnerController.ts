@@ -35,12 +35,15 @@ export const loginDeliveryPartner = async (req: Request, res: Response) => {
 // GET /api/delivery/myDelivery
 export const getAssignDeliveryPartner = async (req: Request, res: Response) => {
    const { status } = req.query;
-   const where: any = { deliveryPartnerId: req.user!.id, Not: [{ paymentMethod: 'card', isPaid: false }] };
-   if (status === 'active') {
-      where.status = {
-         in: ['Assigned', 'Packed', 'Out for Delivery'],
-      };
-   } else if (status === 'completed') where.status = { in: ['Delivered', 'Cancelled'] };
+const where: any = {
+   deliveryPartnerId: req.user!.id,
+   NOT: [{ paymentMethod: 'card', isPaid: false }],
+};
+if (status === 'active') {
+   where.status = {
+      in: ['Assigned', 'Packed', 'Out for Delivery'],
+   };
+} else if (status === 'completed') where.status = { in: ['Delivered', 'Cancelled'] };
 
    const orders = await prisma.order.findMany({
       where,
@@ -133,7 +136,7 @@ export const cancelDelivery = async (req: Request, res: Response) => {
 export const updateDeliveryStatus = async (req: Request, res: Response) => {
    const { status } = req.body;
    const allowStatus = ['Packed', 'Out For Delivery'];
-   if (!allowStatus.includes) {
+   if (!allowStatus.includes(status)) {
       return res.status(400).json({ message: 'Invalid status update' });
    }
    const order = await prisma.order.findFirst({
