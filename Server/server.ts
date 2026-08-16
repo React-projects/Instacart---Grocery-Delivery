@@ -23,7 +23,7 @@ app.get('/', (req: Request, res: Response) => {
    res.send('Server is Live!');
 });
 app.use('/api/auth', authRouter);
-app.use('/api/product', productRouter);
+app.use('/api/products', productRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/addresses', addressRouter);
