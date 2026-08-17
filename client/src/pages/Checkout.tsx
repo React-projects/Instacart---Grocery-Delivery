@@ -16,15 +16,15 @@ const Checkout = () => {
     const { items, cartTotal } = useCart();
     const { user } = { user: { addresses: dummyAddressData } };
     const [address, setAddress] = useState<Address>({
-        _id: '',
-        label: 'Home',
-        address: '',
-        city: '',
-        state: '',
-        zip: '',
-        isDefault: false,
-        lat: 0,
-        lng: 0,
+       id: '',
+       label: 'Home',
+       address: '',
+       city: '',
+       state: '',
+       zip: '',
+       isDefault: false,
+       lat: 0,
+       lng: 0,
     });
     const [paymentMethod, setPaymentMethod] = useState('card');
     const deliveryFee = cartTotal > 20 ? 0 : 1.99;
@@ -56,15 +56,15 @@ const Checkout = () => {
         if (user && user.addresses && user.addresses.length > 0) {
             const defaultAddress = user.addresses.find((addr: Address) => addr.isDefault) || user.addresses[0];
             setAddress({
-                _id: defaultAddress._id,
-                label: defaultAddress.label,
-                address: defaultAddress.address,
-                city: defaultAddress.city,
-                state: defaultAddress.state,
-                zip: defaultAddress.zip,
-                isDefault: false,
-                lat: defaultAddress.lat || 0,
-                lng: defaultAddress.lng || 0,
+               id: defaultAddress.id,
+               label: defaultAddress.label,
+               address: defaultAddress.address,
+               city: defaultAddress.city,
+               state: defaultAddress.state,
+               zip: defaultAddress.zip,
+               isDefault: false,
+               lat: defaultAddress.lat || 0,
+               lng: defaultAddress.lng || 0,
             });
         }
     });
