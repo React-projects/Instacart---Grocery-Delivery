@@ -5,8 +5,10 @@ import { MapMinusIcon, Plus, PlusIcon } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import AddressCard from '../components/Address/AddressCard';
 import AddressFOrm from '../components/Address/AddressFOrm';
+import { useAuth } from '../context/AuthContext';
 
 const Address = () => {
+    const { updateUser } = useAuth();
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -31,8 +33,13 @@ const Address = () => {
         setShowForm(false);
         setEditingId(null);
     };
+    const getLocation = (retries = 3): Promise<{lat:number}> => {};
     const handelSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
+        try {
+            const coords= await
+        } catch {}
+
     };
     const editHandler = (address: Address) => {
         setForm({
