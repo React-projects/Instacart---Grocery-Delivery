@@ -1,18 +1,26 @@
 import { useEffect, useState } from 'react';
 import type { Product } from '../types';
-import { dummyProducts } from '../assets/assets';
 import { Zap } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import ProductCard from '../components/common/ProductCard';
+import api from '../Config/api';
+import toast from 'react-hot-toast';
 
 const FlashDeals = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        setProducts(dummyProducts.filter((product: any) => product.stock > 0));
-        console.log(products);
-        setTimeout(() => setLoading(false), 1000);
-    }, []);
+      useEffect(() => {
+         api.get('/products/flash-deals')
+            .then((res) => {
+               setProducts(res.data.products);
+            })
+            .catch((error) => {
+               toast.error(error.response.res.message || error?.message);
+            })
+            .finally(() => {
+               setLoading(false);
+            });
+      }, []);
     return (
        <div className='min-h-screen bg-app-cream'>
           {/* Banner */}

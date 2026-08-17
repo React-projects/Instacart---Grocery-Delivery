@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import type { Product } from '../types';
 import { Link, useSearchParams } from 'react-router-dom';
-import { dummyProducts } from '../assets/assets';
 import { HomeIcon, Search } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import ProductCard from '../components/common/ProductCard';
+import api from '../Config/api';
+import toast from 'react-hot-toast';
 
 const SearchResult = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -12,10 +13,19 @@ const SearchResult = () => {
     const [searchParam] = useSearchParams('');
     const query = searchParam.get('q') || '';
     useEffect(() => {
-        if (!query) return;
+       if (!query) return;
         setLoading(true);
-        setProducts(dummyProducts.filter(product => product.name.toLowerCase().includes(query.toLowerCase())) || dummyProducts.filter(product => product.name.toLowerCase().includes(query.toLowerCase())));
-        setLoading(false);
+       api.get(`/products?search=${encodeURIComponent(query)}`)
+          .then((res) => {
+             setProducts(res.data.products);
+          })
+          .catch((error) => {
+             toast.error(error.response.res.message || error?.message);
+          })
+          .finally(() => {
+             setLoading(false);
+          });
+
     }, [query]);
 
     return (

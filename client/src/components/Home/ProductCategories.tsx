@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 const ProductCategories = () => {
     const [products, setProducts] = useState<Product[]>([]);
     useEffect(() => {
-         api.get('/products&&sort=rating')
+         api.get('/products?sort=rating')
             .then((res) => {
                setProducts(res.data.products);
             })
@@ -33,7 +33,7 @@ const ProductCategories = () => {
              </div>
              <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 xl:gap-8'>
                 {products.slice(0, 10).map((product) => (
-                   <ProductCard key={product._id} product={product} />
+                   <ProductCard key={product.id} product={product} />
                 ))}
              </div>
           </div>

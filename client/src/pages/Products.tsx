@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { Product } from '../types';
-import { categoriesData, dummyProducts } from '../assets/assets';
+import { categoriesData } from '../assets/assets';
 import { ChevronDown, HomeIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react';
 import ProductCard from '../components/common/ProductCard';
 import Loading from '../components/common/Loading';
 import FilterPanel from '../components/Products/FilterPanel';
+import api from '../Config/api';
+import toast from 'react-hot-toast';
+// import IconButton from '@mui/material/IconButton';
 
 const Products = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -21,8 +24,25 @@ const Products = () => {
     const maxPrice = searchParams.get('maxPrice') || '';
     const fetchProducts = async () => {
         setLoading(true);
-        setProducts(dummyProducts.filter(product => product.category === category || category === ''));
-        setLoading(false);
+        try {
+           const params = new URLSearchParams();
+           if (category) params.set('category', category);
+           if (organic) params.set('category', organic);
+           if (sort) params.set('sort', sort);
+           if (minPrice) params.set('minPrice', minPrice);
+           if (maxPrice) params.set('maxPrice', maxPrice);
+           params.set('page', String(page));
+           params.set('limit', '12');
+
+           const { data }: any = await api.get(`/products?${params.toString()}`);
+           setProducts(data.products);
+           setTotalPages(data.totalPages);
+        } catch (error: any) {
+           toast.error(error?.response?.data?.message || error?.message);
+        } finally {
+           setLoading(false);
+        }
+
     };
     const updateFilters = (key: string, value: string) => {
         const newParams = new URLSearchParams(searchParams);

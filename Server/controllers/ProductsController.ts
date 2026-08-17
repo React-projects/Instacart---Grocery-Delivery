@@ -8,9 +8,9 @@ export const getFlashDeals = async (req: Request, res: Response) => {
          stock: {
             gt: 0,
          },
-         orderBy: {
-            originalPrice: 'desc',
-         },
+      },
+      orderBy: {
+         originalPrice: 'desc',
       },
    });
 

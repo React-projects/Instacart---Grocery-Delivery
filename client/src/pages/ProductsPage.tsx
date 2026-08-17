@@ -7,6 +7,8 @@ import Loading from '../components/common/Loading';
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon, LeafIcon, MinusIcon, PlusIcon, ShoppingBagIcon, ShoppingCartIcon, Star, StarIcon } from 'lucide-react';
 import DummyReviewsSection from '../assets/DummyReviewsSection';
 import ProductCard from '../components/common/ProductCard';
+import toast from 'react-hot-toast';
+import api from '../Config/api';
 
 const ProductsPage = () => {
     const currency = import.meta.env.VITE_CURRENY_SYMBOL || '$';
@@ -19,13 +21,25 @@ const ProductsPage = () => {
     const [localQuantity, setLocalQuantity] = useState(1);
 
     useEffect(() => {
-        setLoading(true);
-        setLocalQuantity(1);
+       setLoading(true);
+       setLocalQuantity(1);
         window.scrollTo(0, 0);
-        const product = dummyProducts.find((product) => product.id === id) || null;
-        setProduct(product!);
-        setRelatedProducts(dummyProducts.filter((product) => product.id !== id));
-        setLoading(false);
+       api.get(`/products/${id}`)
+          .then(({ data }) => {
+             setProduct(data.product);
+             return api.get(`/products?category/${data.product.category}`);
+          })
+          .then(({ data }) => {
+             setRelatedProducts(data.products.filter((product: Product) => product.id !== id));
+          })
+          .catch((error) => {
+             toast.error(error.response.res.message || error?.message);
+          })
+          .finally(() => {
+             setLoading(false);
+          });
+
+       setProduct(product!);
     }, [id, navigate]);
     if (loading) return <Loading />;
     if (!product) return null;
