@@ -153,11 +153,12 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
    const updatedOrder = await prisma.order.update({
       where: {
          id: req.params.id as string,
-         include: {
-            deliveryPartner: { select: { name: true, phone: true } },
-         },
-         orderBy: { createdAt: 'desc' },
       },
+      include: {
+         deliveryPartner: { select: { name: true, phone: true } },
+         //    orderBy: { createdAt: 'desc' },
+      },
+
       data: {
          status,
          statusHistory: history,
