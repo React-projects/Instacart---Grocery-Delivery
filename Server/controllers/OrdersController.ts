@@ -27,7 +27,6 @@ export const createOrder = async (req: Request, res: Response) => {
       if (!product || (product.stock ?? 0) < item.quantity) {
          return res.status(400).json({ message: 'Product is out of stock' });
       }
-      return res.status(400).json({ message: 'Product is out of stock' });
    }
    const ordersItems = items.map((item: any) => {
       const dbProduct = productMap[item.product];
@@ -103,7 +102,7 @@ export const createOrder = async (req: Request, res: Response) => {
 // Get /api/orders
 export const getUsersOrder = async (req: Request, res: Response) => {
    const { status } = req.query;
-   const where: any = { userId: req.user!.id, Not: [{ paymentMethod: 'card', isPaid: false }] };
+   const where: any = { userId: req.user!.id, NOT: [{ paymentMethod: 'card', isPaid: false }] };
 
    if (status && status !== 'all') {
       where.status = status;

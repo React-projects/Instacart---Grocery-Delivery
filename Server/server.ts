@@ -25,7 +25,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/auth', authRouter);
 app.use('/api/products', productRouter);
 app.use('/api/upload', uploadRouter);
-app.use('/api/order', orderRouter);
+app.use('/api/orders', orderRouter);
 app.use('/api/addresses', addressRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/delivery', deliveryPartnerRouter);
