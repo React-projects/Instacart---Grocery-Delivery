@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import type { Address } from '../types';
-import { dummyAddressData } from '../assets/assets';
 import { MapMinusIcon, Plus, PlusIcon } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import AddressCard from '../components/Address/AddressCard';
 import AddressFOrm from '../components/Address/AddressFOrm';
 import { useAuth } from '../context/AuthContext';
+import api from '../Config/api';
+import toast from 'react-hot-toast';
 
 const Address = () => {
     const { updateUser } = useAuth();
@@ -33,12 +34,51 @@ const Address = () => {
         setShowForm(false);
         setEditingId(null);
     };
-    const getLocation = (retries = 3): Promise<{lat:number}> => {};
+    const getLocation = (retries = 3): Promise<{ lat: number; lng: number }> => {
+       return new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+             reject(new Error('Geolocation is not supported by your browser.'));
+             return;
+          }
+          const attempt = () => {
+             navigator.geolocation.getCurrentPosition(
+                (position) => {
+                   resolve({ lat: position.coords.latitude, lng: position.coords.longitude });
+                },
+                (error: any) => {
+                   if (retries > 0) {
+                      retries--;
+                      setTimeout(attempt, 1000);
+                   } else {
+                      reject(new Error(error.message || 'Unable to get location. Please allow location access.'));
+                   }
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 },
+             );
+          };
+          attempt();
+       });
+    };
     const handelSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
         try {
-            const coords= await
-        } catch {}
+           const coords = await getLocation();
+           const payload = { ...form, ...coords };
+           if (editingId) {
+              const { data } = await api.put(`addresses/${editingId}`, payload);
+              setAddresses(data.addresses);
+              updateUser({ addresses: data.addresses });
+              toast.success('Address updated successfully!');
+           } else {
+              const { data } = await api.post('/addresses', payload);
+              setAddresses(data.addresses);
+              updateUser({ addresses: data.addresses });
+              toast.success('Address added successfully!');
+           }
+           resetForm();
+        } catch (error: any) {
+           toast.error(error.response?.data?.message || error.message || 'Unable to get location. Please allow location access.');
+        }
 
     };
     const editHandler = (address: Address) => {
@@ -54,10 +94,17 @@ const Address = () => {
         setShowForm(true);
     };
     useEffect(() => {
-        setAddresses(dummyAddressData);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
+     api.get('/addresses/all')
+        .then(({ data }) => {
+           setAddresses(data.addresses);
+           setLoading(false);
+        })
+        .catch((error: any) => {
+           toast.error(error.response?.data?.message || error.message || 'Unable to get location. Please allow location access.');
+        })
+        .finally(() => {
+           setLoading(false);
+        });
     }, []);
     return (
        <div className='min-h-screen bg-app-cream'>

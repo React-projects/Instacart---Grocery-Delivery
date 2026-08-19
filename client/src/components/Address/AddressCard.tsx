@@ -1,5 +1,8 @@
 import { CheckIcon, MapPinIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import type { Address } from '../../types';
+import api from '../../Config/api';
+import { useAuth } from '../../context/AuthContext';
+import toast from 'react-hot-toast';
 
 interface AddersCardProps {
     addr: Address;
@@ -7,8 +10,18 @@ interface AddersCardProps {
     setAddresses: (address: Address[]) => void;
 }
 const AddressCard = ({ addr, onEditHandler, setAddresses }: AddersCardProps) => {
-    const handleDelete = (id: string) => {
-        console.log('Delete address with id:', id);
+    const { updateUser } = useAuth();
+    const handleDelete = async (id: string) => {
+       try {
+          const confirm = window.confirm('Are you sure you want to delete this address?');
+          if (!confirm) return;
+          const { data } = await api.delete(`/addresses/${id}`);
+          setAddresses(data.addresses);
+          updateUser({ addresses: data.addresses });
+          toast.success('Address deleted successfully!');
+       } catch (error: any) {
+          toast.error(error.response?.data?.message || error.message || 'Unable to get location. Please allow location access.');
+       }
     };
     return (
        <div key={addr.id} className='max-w-3xl bg-white rounded-2xl p-6 flex items-start justify-between'>
