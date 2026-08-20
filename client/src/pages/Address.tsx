@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Address as AddressType } from '../types';
+import type { Address, Address as AddressType } from '../types';
 import { MapMinusIcon, PlusIcon } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import AddressCard from '../components/Address/AddressCard';
