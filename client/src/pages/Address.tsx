@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Address as AddressType } from '../types';
+import type { Address } from '../types';
 import { MapMinusIcon, PlusIcon } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import AddressCard from '../components/Address/AddressCard';
@@ -8,9 +8,9 @@ import { useAuth } from '../context/AuthContext';
 import api from '../Config/api';
 import toast from 'react-hot-toast';
 
-const Address = () => {
+const AddressPage = () => {
     const { updateUser } = useAuth();
-    const [addresses, setAddresses] = useState<AddressType[]>([]);
+    const [addresses, setAddresses] = useState<Address[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -145,4 +145,4 @@ const Address = () => {
     );
 };
 
-export default Address;
+export default AddressPage;
