@@ -1,4 +1,14 @@
-const FilterPanel = ({ categories, category, minprice, maxprice, updateFilters, hasFilters, clearFilters }) => {
+interface FilterPanelProps {
+    categories: Array<{ slug: string; name: string }>;
+    category: string;
+    minprice: string;
+    maxprice: string;
+    updateFilters: (key: string, value: string) => void;
+    hasFilters: boolean;
+    clearFilters: () => void;
+}
+
+const FilterPanel = ({ categories, category, minprice, maxprice, updateFilters, hasFilters, clearFilters }: FilterPanelProps) => {
     const categoryWithAll = [{ slug: '', name: 'All Categories' }, ...categories];
     return (
         <div className="space-y-6">
@@ -7,7 +17,7 @@ const FilterPanel = ({ categories, category, minprice, maxprice, updateFilters, 
                 <h3 className="text-sm font-semibold text-app-green mb-3">categories</h3>
                 <div className="s-y-1.5">
                     {categoryWithAll.map((cat: any) => (
-                        <button onClick={() => updateFilters('category', cat.slug)} className={` block w-full text-left px-3 py-2 text-sm rounded-md transition-all ${category === cat.slug ? 'bg-app-green text-white' : 'text-app-text-light hover:bg-app-cream'}`} key={cat.slug} onClick={() => updateFilters('category', cat.slug)}>
+                        <button key={cat.slug} onClick={() => updateFilters('category', cat.slug)} className={` block w-full text-left px-3 py-2 text-sm rounded-md transition-all ${category === cat.slug ? 'bg-app-green text-white' : 'text-app-text-light hover:bg-app-cream'}`}>
                             {cat.name}
                         </button>
                     ))}

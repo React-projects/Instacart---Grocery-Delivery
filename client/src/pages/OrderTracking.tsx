@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Order } from '../types';
-import { statusColors } from '../assets/assets';
 import Loading from '../components/common/Loading';
 import { ArrowLeftIcon, MapPinIcon, PhoneIcon } from 'lucide-react';
 import OrderOTP from '../components/OrderTracking/OrderOTP';
@@ -174,6 +173,6 @@ const OrderTracking = () => {
          </div>
       </div>
    );
-};;;;;;;;;;;;;;
+};
 
 export default OrderTracking;

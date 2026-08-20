@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { heroSectionData } from '../assets/assets';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { BikeIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react';
 import toast, { LoaderIcon } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -13,7 +13,6 @@ const Login = () => {
 
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const { login, register } = useAuth();
     const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();

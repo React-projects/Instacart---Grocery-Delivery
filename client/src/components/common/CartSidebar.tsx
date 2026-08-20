@@ -4,7 +4,7 @@ import { ArrowRightIcon, MinusIcon, PlusIcon, ShoppingBagIcon, TrashIcon, XIcon 
 
 const CartSidebar = () => {
     const currency = import.meta.env.VITE_CURRENCY_SYMBOL || '$';
-    const { items, updateQuantity, removeFromCart, cartCount, cartTotal, cartOpen, setCartOpen } = useCart();
+    const { items, updateQuantity, removeFromCart, cartTotal, cartOpen, setCartOpen } = useCart();
     const navigate = useNavigate();
     if (!cartOpen) return null;
     const deliveryFee = cartTotal > 20 ? 0 : 1.99;

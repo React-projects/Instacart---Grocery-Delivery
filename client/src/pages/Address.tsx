@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { Address } from '../types';
-import { MapMinusIcon, Plus, PlusIcon } from 'lucide-react';
+import type { Address as AddressType } from '../types';
+import { MapMinusIcon, PlusIcon } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import AddressCard from '../components/Address/AddressCard';
 import AddressFOrm from '../components/Address/AddressFOrm';
@@ -10,10 +10,10 @@ import toast from 'react-hot-toast';
 
 const Address = () => {
     const { updateUser } = useAuth();
-    const [addresses, setAddresses] = useState<Address[]>([]);
+    const [addresses, setAddresses] = useState<AddressType[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [editingId, setEditingId] = useState<String | null>(null);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState({
         label: '',
         address: '',
