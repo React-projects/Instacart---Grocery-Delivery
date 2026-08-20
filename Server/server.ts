@@ -10,8 +10,10 @@ import { inngest, functions } from './inngest/index.js';
 import addressRouter from './Routes/adderssRoutes.js';
 import adminRouter from './Routes/adminRoutes.js';
 import deliveryPartnerRouter from './Routes/deliveryPartnerRoutes.js';
+import { stripeWebhooks } from './controllers/webhooks.js';
 
 const app = express();
+app.post('api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
 
 // Middleware
 app.use(cors());
@@ -23,9 +25,9 @@ app.get('/', (req: Request, res: Response) => {
    res.send('Server is Live!');
 });
 app.use('/api/auth', authRouter);
-app.use('/api/product', productRouter);
+app.use('/api/products', productRouter);
 app.use('/api/upload', uploadRouter);
-app.use('/api/order', orderRouter);
+app.use('/api/orders', orderRouter);
 app.use('/api/addresses', addressRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/delivery', deliveryPartnerRouter);

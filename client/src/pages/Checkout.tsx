@@ -1,30 +1,31 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CardContext';
-import { dummyAddressData } from '../assets/assets';
 import type { Address } from '../types';
-import { ArrowLeftIcon, CheckIcon, ChevronRight, ChevronRightIcon, CreditCardIcon, MapPinIcon } from 'lucide-react';
+import { ArrowLeftIcon, CheckIcon, ChevronRightIcon, CreditCardIcon, MapPinIcon } from 'lucide-react';
 import CheckoutAddress from '../components/Checkout/CheckoutAddress';
 import CheckoutPayment from '../components/Checkout/CheckoutPayment';
 import CheckoutReview from '../components/Checkout/CheckoutReview';
+import api from '../Config/api';
+import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
 
 const Checkout = () => {
     const navigate = useNavigate();
-    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || '$';
     const [step, setStep] = useState('address');
     const [loading, Setloading] = useState(false);
-    const { items, cartTotal } = useCart();
-    const { user } = { user: { addresses: dummyAddressData } };
+    const { items, cartTotal, clearCart } = useCart();
+    const { user } = useAuth();
     const [address, setAddress] = useState<Address>({
-        _id: '',
-        label: 'Home',
-        address: '',
-        city: '',
-        state: '',
-        zip: '',
-        isDefault: false,
-        lat: 0,
-        lng: 0,
+       id: '',
+       label: 'Home',
+       address: '',
+       city: '',
+       state: '',
+       zip: '',
+       isDefault: false,
+       lat: 0,
+       lng: 0,
     });
     const [paymentMethod, setPaymentMethod] = useState('card');
     const deliveryFee = cartTotal > 20 ? 0 : 1.99;
@@ -47,24 +48,45 @@ const Checkout = () => {
             icon: CheckIcon,
         },
     ];
-    const handlePlaceOrder = () => {
-        Setloading(true);
-        navigate('/orders');
+    const handlePlaceOrder = async () => {
+       Setloading(true);
+       try {
+          const orderData = {
+             items: items.map((item) => ({
+                product: item.product.id,
+                quantity: item.quantity,
+             })),
+             shippingAddress: address,
+             paymentMethod,
+          };
+          const { data } = await api.post('/orders', orderData);
+          if (data.url) {
+             window.location.href = data.url;
+             return;
+          }
+          clearCart();
+          toast.success('Order placed successfully!');
+          navigate(`/orders/${data.order.id}`);
+       } catch (error: any) {
+          toast.error(error.response?.data?.message || error.message || 'Unable to place order. Please try again.');
+       } finally {
+          Setloading(false);
+       }
     };
     // populate  Address for user make it default Address
     useState(() => {
         if (user && user.addresses && user.addresses.length > 0) {
             const defaultAddress = user.addresses.find((addr: Address) => addr.isDefault) || user.addresses[0];
             setAddress({
-                _id: defaultAddress._id,
-                label: defaultAddress.label,
-                address: defaultAddress.address,
-                city: defaultAddress.city,
-                state: defaultAddress.state,
-                zip: defaultAddress.zip,
-                isDefault: false,
-                lat: defaultAddress.lat || 0,
-                lng: defaultAddress.lng || 0,
+               id: defaultAddress.id,
+               label: defaultAddress.label,
+               address: defaultAddress.address,
+               city: defaultAddress.city,
+               state: defaultAddress.state,
+               zip: defaultAddress.zip,
+               isDefault: false,
+               lat: defaultAddress.lat || 0,
+               lng: defaultAddress.lng || 0,
             });
         }
     });

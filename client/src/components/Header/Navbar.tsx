@@ -2,9 +2,10 @@ import { ArrowUpRight, ArrowUpRightIcon, BikeIcon, ChevronDown, ChevronDownIcon,
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CardContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
-    const user: any = { name: 'John Doe', email: 'johndoe@example.com', isAdmin: true };
+    const { user, logout } = useAuth();
     const { cartCount, setCartOpen } = useCart();
     const [searchTerm, setSearchTerm] = useState('');
     const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -18,6 +19,7 @@ const Navbar = () => {
     };
     const handleLogout = () => {
         // Your logout logic here (e.g., clear user session, redirect to login page)
+        logout();
         setUserMenuOpen(false);
         navigate('/');
     };

@@ -15,7 +15,7 @@ const ProductCard = ({ product }: props) => {
         <div
             className="bg-white rounded-2xl overflow-hidden shadow hover:shadow-md transition-all duration-300 group animate-fade-in cursor-pointer"
             onClick={() => {
-                navigate(`/product/${product._id}`);
+                navigate(`/product/${product.id}`);
             }}
         >
             {/* Image */}
