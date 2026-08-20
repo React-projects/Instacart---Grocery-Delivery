@@ -10,7 +10,7 @@ import FlashDeals from './pages/FlashDeals';
 import Checkout from './pages/Checkout';
 import MyOrders from './pages/MyOrders';
 import OrderTracking from './pages/OrderTracking';
-import Address from './pages/Address';
+import AddressPage from './pages/Address';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -39,7 +39,7 @@ const App = () => {
                   <Route path='/checkout' element={<Checkout />} />
                   <Route path='/orders' element={<MyOrders />} />
                   <Route path='/orders/:id' element={<OrderTracking />} />
-                  <Route path='/addresses' element={<Address />} />
+                  <Route path='/addresses' element={<AddressPage />} />
                </Route>
             </Route>
             {/* Admin Pages */}
