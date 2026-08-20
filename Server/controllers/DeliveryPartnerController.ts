@@ -5,7 +5,7 @@ import { prisma } from '../Config/prisam.js';
 
 // generate a wtf tokens
 const generateToken = (id: string) => {
-   return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '30d' });
+   return jwt.sign({ id, role: 'delivery' }, process.env.JWT_SECRET as string, { expiresIn: '30d' });
 };
 // login DeliveryPartner
 // Post/api/delivery-partner/login
@@ -35,15 +35,15 @@ export const loginDeliveryPartner = async (req: Request, res: Response) => {
 // GET /api/delivery/myDelivery
 export const getAssignDeliveryPartner = async (req: Request, res: Response) => {
    const { status } = req.query;
-const where: any = {
-   deliveryPartnerId: req.user!.id,
-   NOT: [{ paymentMethod: 'card', isPaid: false }],
-};
-if (status === 'active') {
-   where.status = {
-      in: ['Assigned', 'Packed', 'Out for Delivery'],
+   const where: any = {
+      deliveryPartnerId: req.partner!.id,
+      NOT: [{ paymentMethod: 'card', isPaid: false }],
    };
-} else if (status === 'completed') where.status = { in: ['Delivered', 'Cancelled'] };
+   if (status === 'active') {
+      where.status = {
+         in: ['Assigned', 'Packed', 'Out for Delivery'],
+      };
+   } else if (status === 'completed') where.status = { in: ['Delivered', 'Cancelled'] };
 
    const orders = await prisma.order.findMany({
       where,
@@ -135,7 +135,7 @@ export const cancelDelivery = async (req: Request, res: Response) => {
 
 export const updateDeliveryStatus = async (req: Request, res: Response) => {
    const { status } = req.body;
-   const allowStatus = ['Packed', 'Out For Delivery'];
+   const allowStatus = ['Packed', 'Out for Delivery'];
    if (!allowStatus.includes(status)) {
       return res.status(400).json({ message: 'Invalid status update' });
    }
@@ -163,7 +163,7 @@ export const updateDeliveryStatus = async (req: Request, res: Response) => {
 export const updateDeliveryLocation = async (req: Request, res: Response) => {
    const { lat, lng } = req.body;
    const order = await prisma.order.findFirst({
-      where: { id: req.params.id as string, deliveryPartnerId: req.partner!.id, status: { in: ['Assign', 'Packed', 'Out for Delivery'] } },
+      where: { id: req.params.id as string, deliveryPartnerId: req.partner!.id, status: { in: ['Assigned', 'Packed', 'Out for Delivery'] } },
    });
    await prisma.order.update({
       where: { id: order!.id },
