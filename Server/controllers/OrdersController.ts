@@ -65,10 +65,10 @@ export const createOrder = async (req: Request, res: Response) => {
       },
    });
    if (paymentMethod === 'card') {
-      const strip = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
       //    createCheckoutSession
       const session = await stripe.checkout.sessions.create({
-         success_url: `${req.headers.origin}/orders?clearCart=true`,
+         success_url: `${req.headers.origin}/orders?clearCart=true&session_id={CHECKOUT_SESSION_ID}`,
          cancel_url: `${req.headers.origin}/checkout`,
          line_items: [
             {
@@ -87,7 +87,7 @@ export const createOrder = async (req: Request, res: Response) => {
             orderId: order.id,
          },
       });
-      return res.json({ url: session.id });
+      return res.json({ url: session.url });
    }
    res.status(200).json({ message: 'Order created successfully', order });
 
@@ -221,4 +221,76 @@ export const getOrderLocation = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Order not found' });
    }
    res.status(200).json({ message: 'Order location fetched successfully', liveLocation: order.liveLocation, status: order.status });
+};
+
+// Verify Stripe Checkout Session
+// POST /api/orders/verify-stripe
+export const verifyStripePayment = async (req: Request, res: Response) => {
+   const { sessionId } = req.body;
+   if (!sessionId) {
+      return res.status(400).json({ message: 'Session ID is required' });
+   }
+
+   try {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.payment_status === 'paid' && session.metadata?.orderId) {
+         const orderId = session.metadata.orderId;
+         const order = await prisma.order.findUnique({
+            where: { id: orderId },
+         });
+
+         if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+         }
+
+         if (order.isPaid) {
+            return res.status(200).json({ message: 'Order already verified', order });
+         }
+
+         const updatedOrder = await prisma.order.update({
+            where: { id: orderId },
+            data: { isPaid: true },
+         });
+
+         const ordersItems = (Array.isArray(updatedOrder.items) ? updatedOrder.items : []) as any[];
+
+         // Decrease Stock
+         for (const item of ordersItems) {
+            if (item.product) {
+               await prisma.product.update({
+                  where: { id: item.product },
+                  data: {
+                     stock: {
+                        decrement: item.quantity,
+                     },
+                  },
+               });
+            }
+         }
+
+         // Trigger inngest
+         try {
+            await inngest.send({ name: 'order/placed', data: { orderId: updatedOrder.id } });
+            for (const item of ordersItems) {
+               if (item.product) {
+                  await inngest.send({
+                     name: 'inventory/stock-update',
+                     data: { productId: item.product },
+                  });
+               }
+            }
+         } catch (inngestError) {
+            console.error('Inngest dispatch error:', inngestError);
+         }
+
+         return res.status(200).json({ message: 'Payment verified successfully', order: updatedOrder });
+      }
+
+      return res.status(400).json({ message: 'Payment not completed or invalid session' });
+   } catch (error: any) {
+      console.error('Error verifying Stripe payment:', error);
+      return res.status(500).json({ message: error.message || 'Payment verification failed' });
+   }
 };

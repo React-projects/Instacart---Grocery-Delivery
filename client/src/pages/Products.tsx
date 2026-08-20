@@ -61,7 +61,7 @@ const Products = () => {
       setSearchParams({});
    };
    const activeCategory = categoriesData.find((cat) => cat.slug === category);
-   const hasFilters = category || organic || minPrice || maxPrice;
+   const hasFilters = Boolean(category || organic || minPrice || maxPrice);
    useEffect(() => {
       fetchProducts();
    }, [category, organic, sort, page, minPrice, maxPrice]);
@@ -188,6 +188,6 @@ const Products = () => {
          )}
       </div>
    );
-};;
+};
 
 export default Products;

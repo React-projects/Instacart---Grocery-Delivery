@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowRightIcon, LeafIcon } from 'lucide-react';
+import { ArrowRightIcon, LeafIcon } from 'lucide-react';
 import { heroSectionData } from '../../assets/assets';
 import { Link } from 'react-router-dom';
 

@@ -100,7 +100,7 @@ const sendMonthlyOffers = inngest.createFunction({ id: 'send-monthly-offers', na
 
                 <div style="padding: 28px;">
                     <p style="margin: 0 0 20px; font-size: 15px; color: #374151;">
-                        Hi <strong>${u.name}</strong>, check out this month's top picks!
+                        Hi <strong>${user.name}</strong>, check out this month's top picks!
                     </p>
 
                     <table width="100%" cellpadding="0" cellspacing="0">

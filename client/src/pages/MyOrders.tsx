@@ -33,20 +33,34 @@ const MyOrders = () => {
    };
 
    useEffect(() => {
-      // ✅ Check if cart was cleared
-      const clearCartParam = searchParam.get('clearCart');
+      const handleRedirectAndFetch = async () => {
+         const sessionId = searchParam.get('session_id');
+         const clearCartParam = searchParam.get('clearCart');
 
-      if (clearCartParam) {
-         clearCart();
-         // ✅ Fix: Use correct syntax for clearing params
-         setSearchParam(new URLSearchParams());
+         if (sessionId) {
+            setLoading(true);
+            try {
+               await api.post('/orders/verify-stripe', { sessionId });
+               toast.success('Payment verified successfully!');
+            } catch (error: any) {
+               console.error('Payment verification failed:', error);
+            }
+         }
 
-         // ✅ Fetch once after clearing cart
+         if (clearCartParam) {
+            clearCart();
+         }
+
+         if (sessionId || clearCartParam) {
+            setSearchParam(new URLSearchParams());
+            return;
+         }
+
          fetchOrders();
-      } else {
-         fetchOrders();
-      }
-   }, [activeTab, searchParam]); // ✅ Add searchParam dependency
+      };
+
+      handleRedirectAndFetch();
+   }, [activeTab, searchParam]);
 
    return (
       <div className='min-h-screen bg-app-cream mb-20'>

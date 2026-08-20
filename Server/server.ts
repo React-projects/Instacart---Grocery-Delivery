@@ -13,7 +13,7 @@ import deliveryPartnerRouter from './Routes/deliveryPartnerRoutes.js';
 import { stripeWebhooks } from './controllers/webhooks.js';
 
 const app = express();
-app.post('api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
+app.post('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
 
 // Middleware
 app.use(cors());
