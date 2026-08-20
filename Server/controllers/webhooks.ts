@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { prisma } from '../Config/prisam.js';
 import { inngest } from '../inngest/index.js';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string) ;
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET_KEY;
 
 export const stripeWebhooks = async (req: Request, res: Response) => {
